@@ -1,0 +1,64 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+nfs
+
+[OSEv3:vars]
+ansible_ssh_user=root
+
+openshift_deployment_type=openshift-enterprise
+
+oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
+oreg_auth_user=12449009|ggianini
+oreg_auth_password=eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJjZDk0ZWMyZTU4ODg0YzMzOGFjMjU4OGUxNDU3NjY4YyJ9.orkrp5evau5aFVtZL4mTT-_cOqfkbddi8brjSNfc_S1lpxYcSr5y8f_MoqgfrQ-yogYnuVW0OzspZk0x8vSY7OlqPUX9A1VT6jhtbkS75SbTrSj03v_oF4I0ogHwHVQ6b1FEH3htlgUoz5I5_yRP4fHDU12eKiCvVrtRZQMGmj3-tqCeQTpVPGznnd5cIxmx4gozXSJO01OestajrYgn4X_599TUYFVmd1y44St7xn2cZMat22km6CSCChGnovEu2MDbNqkPKxgC4dtW9V1RMn0eI0BYkhHN3iQZjrg4Np8xkYg-TwS0cPqknQoXJeLMSAAJtcMzUR5cj6GOoM5l9JcMKgXWo4DmItsz-kRwgbfL7tedJQHm6TcnTTPhVGm0uaEKs1IjQObOUwV6kci1dTAJAEjZQaK5N5L98ZOcxZGUMex4c2n09fCwVDXnAtZEGMJRajcokxF6kuekvCrd2E9kMyAVisp1KPp_ed16NwZ1sMu1jISk4nvhekULivvPPeRrw9UwceG9Uo99EV4uvfJbm25X5A8r5WLFhP25Iievh8oPuYhrCirMVOCnN8T9dOOpyZkxgRprLOcAg0K4M8PglWoNkwVawWr6uQOIn9GU4HhBihGREmGg_f53HlNTpdNzULIhbUnH5J7tgsBEiEV1PGddK84NK4fMzIXZy1M
+
+openshift_master_identity_providers=[{'name': 'Local', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_users={'admin': '<hidden>', 'superadmin': '<hidden>'}
+
+openshift_master_default_subdomain=apps.ocpdemo.com
+openshift_install_examples=true
+
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+
+openshift_clock_enabled=true
+
+openshift_disable_check=memory_availability,disk_availability,docker_storage,docker_storage_driver
+
+openshift_hosted_registry_storage_kind=nfs
+openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+openshift_hosted_registry_storage_nfs_directory=/exports
+openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+openshift_hosted_registry_storage_volume_name=registry
+openshift_hosted_registry_storage_volume_size=10Gi
+
+openshift_hosted_etcd_storage_kind=nfs
+openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
+openshift_hosted_etcd_storage_nfs_directory=/exports/osev3-etcd
+openshift_hosted_etcd_storage_volume_name=etcd-vol2
+openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+openshift_hosted_etcd_storage_volume_size=1G
+openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
+
+openshift_enable_olm=true
+
+openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'12449009|ggianini','password':'eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiJjZDk0ZWMyZTU4ODg0YzMzOGFjMjU4OGUxNDU3NjY4YyJ9.orkrp5evau5aFVtZL4mTT-_cOqfkbddi8brjSNfc_S1lpxYcSr5y8f_MoqgfrQ-yogYnuVW0OzspZk0x8vSY7OlqPUX9A1VT6jhtbkS75SbTrSj03v_oF4I0ogHwHVQ6b1FEH3htlgUoz5I5_yRP4fHDU12eKiCvVrtRZQMGmj3-tqCeQTpVPGznnd5cIxmx4gozXSJO01OestajrYgn4X_599TUYFVmd1y44St7xn2cZMat22km6CSCChGnovEu2MDbNqkPKxgC4dtW9V1RMn0eI0BYkhHN3iQZjrg4Np8xkYg-TwS0cPqknQoXJeLMSAAJtcMzUR5cj6GOoM5l9JcMKgXWo4DmItsz-kRwgbfL7tedJQHm6TcnTTPhVGm0uaEKs1IjQObOUwV6kci1dTAJAEjZQaK5N5L98ZOcxZGUMex4c2n09fCwVDXnAtZEGMJRajcokxF6kuekvCrd2E9kMyAVisp1KPp_ed16NwZ1sMu1jISk4nvhekULivvPPeRrw9UwceG9Uo99EV4uvfJbm25X5A8r5WLFhP25Iievh8oPuYhrCirMVOCnN8T9dOOpyZkxgRprLOcAg0K4M8PglWoNkwVawWr6uQOIn9GU4HhBihGREmGg_f53HlNTpdNzULIhbUnH5J7tgsBEiEV1PGddK84NK4fMzIXZy1M','test_image':'mongodb/enterprise-operator:0.3.2'}]
+                                                                                                                                                                                                                            1,1           Top
+[masters]
+master.ocpdemo.com
+
+# host group for etcd
+[etcd]
+master.ocpdemo.com
+
+# host group for nodes, includes region info
+[nodes]
+master.ocpdemo.com openshift_node_group_name='node-config-master-infra'
+node1.ocpdemo.com openshift_node_group_name='node-config-compute'
+node2.ocpdemo.com openshift_node_group_name='node-config-compute'
+
+[nfs]
+master.ocpdemo.com
+
+~                                                                                                                                                                                                                                             
+                            
