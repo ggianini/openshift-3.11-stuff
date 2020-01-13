@@ -1,4 +1,4 @@
-#This file is located under /var/named/
+// This file is located under /var/named/
 @   IN  SOA     services.ocpdemo.com. root.ocpdemo.com. (
                                                 1001    ;Serial
                                                 3H      ;Refresh
