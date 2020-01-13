@@ -1,0 +1,21 @@
+#This file is located in /var/named/
+
+@   IN  SOA     services.ocpdemo.com. root.ocpdemo.com. (
+                                                1001    ;Serial
+                                                3H      ;Refresh
+                                                15M     ;Retry
+                                                1W      ;Expire
+                                                1D      ;Minimum TTL
+                                                )
+
+;Name Server Information
+@      IN  NS      services.ocpdemo.com.
+
+;IP address of Name Server
+Services IN  A       192.168.56.29
+
+;A - Record HostName To IP Address
+master     IN  A       192.168.56.30
+node1     IN  A       192.168.56.31
+node2     IN  A       192.168.56.32
+*.apps     IN  A       192.168.56.30
