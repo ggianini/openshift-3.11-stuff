@@ -62,6 +62,7 @@ openshift_metrics_server_install=true
 # ============================================
 openshift_cluster_monitoring_operator_install=true
 
+
 # ===========================================
 # Registry
 # ===========================================
