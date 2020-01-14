@@ -192,9 +192,9 @@ master.ocpdemo.com
 
 # host group for nodes, includes region info
 [nodes]
-master.ocpdemo.com
-node1.ocpdemo.com
-node2.ocpdemo.com
+master.ocpdemo.com openshift_node_group_name='node-config-master-infra'
+node1.ocpdemo.com openshift_node_group_name='node-config-compute'
+node2.ocpdemo.com openshift_node_group_name='node-config-compute'
 
 [nfs]
 services.ocpdemo.com
