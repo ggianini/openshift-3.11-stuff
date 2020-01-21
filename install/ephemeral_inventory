@@ -1,0 +1,138 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+#nfs
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+# ============================================
+# Variaveis Gerais
+# ============================================
+openshift_deployment_type=openshift-enterprise
+openshift_clock_enabled=true
+ansible_ssh_user=root
+openshift_disable_check=memory_availability,disk_availability,docker_storage,docker_storage_driver
+openshift_enable_olm=true
+
+openshift_master_identity_providers=[{'name': 'Local', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_users={'admin': '<hidden>', 'superadmin': '<hidden>'}
+
+# ============================================
+# Configurações do Master
+# ============================================
+openshift_master_cluster_method=native
+openshift_master_cluster_hostname=api-int.ocpdemo.com
+openshift_master_cluster_public_hostname=api.ocpdemo.com
+openshift_master_default_subdomain=apps.ocpdemo.com
+
+#as entradas abaixo n sao utilizadas quando a master tb e infra, nesse caso a api vai utilizar a porta 8443
+#openshift_master_api_port=443
+#openshift_master_console_port=443
+
+openshift_master_htpasswd_users={'admin': '$apr1$xySBCH36$Lzw6m81rKP/hIqJYbXUht0', 'developer': '$apr1$xySBCH36$Lzw6m81rKP/hIqJYbXUht0'}
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+
+# ===========================================
+# Networking
+# ===========================================
+os_sdn_network_plugin_name='redhat/openshift-ovs-networkpolicy'
+# ---------> As duas linhas abaixo devem ser alteradas em caso de coincidencia das redes no cliente. Sugere-se manter as mascaras. Atentar para rede Docker tambem. 172.17.0.0
+osm_cluster_network_cidr=10.128.0.0/14
+openshift_portal_net=172.30.0.0/16
+
+# ============================================
+# Configurações do Docker
+# ============================================
+# ----------> Mudar a linha abaixo caso mude a rede de servico 172.30.0.0/16
+openshift_docker_options="--insecure-registry=172.30.0.0/16 --selinux-enabled --log-driver json-file --log-opt max-size=1M --log-opt max-file=3"
+
+# ===========================================
+# Metrics Server
+# ===========================================
+openshift_metrics_server_install=true
+
+# ============================================
+# Prometheus Operator
+# ============================================
+openshift_cluster_monitoring_operator_install=true
+
+# ===========================================
+# Registry
+# ===========================================
+#openshift_hosted_registry_storage_kind=nfs
+#openshift_hosted_registry_storage_access_modes=['ReadWriteMany']
+#openshift_hosted_registry_storage_nfs_directory=/exports
+#openshift_hosted_registry_storage_nfs_options='*(rw,root_squash)'
+#openshift_hosted_registry_storage_volume_name=registry
+#openshift_hosted_registry_storage_volume_size=10Gi
+
+# ===========================================
+# Logging
+# ===========================================
+openshift_logging_install_logging=true
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra":"true"}
+
+# ===========================================
+# NFS LOGGING EXTERNAL NFS HOST
+# ===========================================
+openshift_enable_unsupported_configurations=true
+#openshift_logging_storage_kind=nfs
+#openshift_logging_storage_access_modes=['ReadWriteOnce']
+#openshift_logging_storage_host=services.ocpdemo.com
+#openshift_logging_storage_nfs_directory=/exports
+#openshift_logging_storage_nfs_options='*(rw,root_squash)'
+#openshift_logging_storage_volume_name=logging
+#openshift_logging_storage_volume_size=10Gi
+#openshift_enable_unsupported_configurations=true
+#openshift_logging_elasticsearch_storage_type=pvc
+#openshift_logging_es_pvc_size=10Gi
+#openshift_logging_es_pvc_storage_class_name=''
+#openshift_logging_es_pvc_dynamic=true
+#openshift_logging_es_pvc_prefix=logging
+
+# ===========================================
+# Service Catalog
+# ===========================================
+openshift_enable_service_catalog=false
+#ansible_service_broker_install=true
+#template_service_broker_install=true
+#template_service_broker_selector={"node-role.kubernetes.io/infra":"true"}
+#openshift_template_service_broker_namespaces=['openshift']
+#ansible_service_broker_local_registry_whitelist=['.*-apb$']
+
+# ===========================================
+# ETCD
+# ===========================================
+#openshift_hosted_etcd_storage_kind=nfs
+#openshift_hosted_etcd_storage_nfs_options="*(rw,root_squash,sync,no_wdelay)"
+#openshift_hosted_etcd_storage_nfs_directory=/exports/osev3-etcd
+#openshift_hosted_etcd_storage_volume_name=etcd-vol2
+#openshift_hosted_etcd_storage_access_modes=["ReadWriteOnce"]
+#openshift_hosted_etcd_storage_volume_size=1G
+#openshift_hosted_etcd_storage_labels={'storage': 'etcd'}
+
+# ===========================================
+# 3.11 new stuff
+# ===========================================
+
+oreg_url=registry.redhat.io/openshift3/ose-${component}:${version}
+oreg_auth_user="12449009|ocpdemo"
+oreg_auth_password='eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiI0MzQ3MzQ0YTZiM2Q0NmFkYjYwYjk0MjEzZDFmOTM0MiJ9.dSFDqjXqrOPz3f4Vmyu_rpht0cO3ZG9ZfMf4Wq3KJZ1Bvo3mpBWlGn1tZhagWIjA5WvCRhvdB_pDZbp1Mhz6v6pdHnrmf2WSA4nQ8i7OUHmAI0eK3XbI3uORzjMcqs4zsDSadKVPuF5RF03KgJ_BJb9N9cHtlOiEKH_5RXBdOhxQ-ASIhILe_CUdvuPIVI4bXXY1l-1y2lDWQ_4K8s-if2_rI8GHSDiieotpodLnO1Tahoc5agn9ypMAZBJJJlje0U2E5ZZvKS39aVhPKM-pnSNghmu4wy58LCkeDXwPh8YpEgpGCBoeQckyeC0_J07c7pKdSGooEqTA2BBcZGAyibz2jvNSqXIOhqgV1t_UV9MBebz-sZ-yjK6bG5j8818_yNU-bgKwQ5Pj8Iy_dtm-OfEXGcXU09FuT4jMXU2QPTyCoqPb9jUp9rjnu48rzY0dxCX0gouLadY5gh2rGgcPC9EY3pRc_Qk8ZLQfXmDjksrj9Lw0d1wdvRrUUY6MWGJ8YByB2G3ulyEvIUosxz1fB_Hno2-Fv0E-1ZjpuX404znaZ8CjMAO5TATkhZSczKl-He7U823BXh0fu0i8Ebp0SEwQ7IvOdPbYKbT5GJukMJ1_X77vdrTykwZfRg8DGT8I_pkppQwLaBuQs9f31XxOADa1FEsPZjlRZAFshQdBszw'
+openshift_examples_modify_imagestreams=true
+openshift_install_examples=true
+openshift_additional_registry_credentials=[{'host':'registry.connect.redhat.com','user':'12449009|ocpdemo','password':'eyJhbGciOiJSUzUxMiJ9.eyJzdWIiOiI0MzQ3MzQ0YTZiM2Q0NmFkYjYwYjk0MjEzZDFmOTM0MiJ9.dSFDqjXqrOPz3f4Vmyu_rpht0cO3ZG9ZfMf4Wq3KJZ1Bvo3mpBWlGn1tZhagWIjA5WvCRhvdB_pDZbp1Mhz6v6pdHnrmf2WSA4nQ8i7OUHmAI0eK3XbI3uORzjMcqs4zsDSadKVPuF5RF03KgJ_BJb9N9cHtlOiEKH_5RXBdOhxQ-ASIhILe_CUdvuPIVI4bXXY1l-1y2lDWQ_4K8s-if2_rI8GHSDiieotpodLnO1Tahoc5agn9ypMAZBJJJlje0U2E5ZZvKS39aVhPKM-pnSNghmu4wy58LCkeDXwPh8YpEgpGCBoeQckyeC0_J07c7pKdSGooEqTA2BBcZGAyibz2jvNSqXIOhqgV1t_UV9MBebz-sZ-yjK6bG5j8818_yNU-bgKwQ5Pj8Iy_dtm-OfEXGcXU09FuT4jMXU2QPTyCoqPb9jUp9rjnu48rzY0dxCX0gouLadY5gh2rGgcPC9EY3pRc_Qk8ZLQfXmDjksrj9Lw0d1wdvRrUUY6MWGJ8YByB2G3ulyEvIUosxz1fB_Hno2-Fv0E-1ZjpuX404znaZ8CjMAO5TATkhZSczKl-He7U823BXh0fu0i8Ebp0SEwQ7IvOdPbYKbT5GJukMJ1_X77vdrTykwZfRg8DGT8I_pkppQwLaBuQs9f31XxOADa1FEsPZjlRZAFshQdBszw','test_image':'mongodb/enterprise-operator:0.3.2'}]
+
+[masters]
+master.ocpdemo.com openshift_ip=192.168.56.30
+
+[etcd]
+master.ocpdemo.com etcd_ip=192.168.56.30
+
+[nodes]
+master.ocpdemo.com openshift_node_group_name='node-config-master-infra' openshift_ip=192.168.56.30
+node1.ocpdemo.com openshift_node_group_name='node-config-compute' openshift_ip=192.168.56.31
+node2.ocpdemo.com openshift_node_group_name='node-config-compute' openshift_ip=192.168.56.32
+
+#[nfs]
+#services.ocpdemo.com openshift_ip=192.168.56.29
