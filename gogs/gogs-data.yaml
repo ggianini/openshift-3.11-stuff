@@ -10,7 +10,7 @@
     persistentVolumeReclaimPolicy: Recycle
     nfs:
       path: /exports/gogs
-      server: master.ocpdemo.com
+      server: services.ocpdemo.com
     ClaimRef:
       name: gogs-data
-      namespace: demo-project                               
+      namespace: demo                     
