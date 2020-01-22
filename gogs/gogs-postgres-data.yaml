@@ -10,7 +10,7 @@
     persistentVolumeReclaimPolicy: Recycle
     nfs:
       path: /exports/postgres
-      server: master.ocpdemo.com
+      server: services.ocpdemo.com
     ClaimRef:
-      name: gogs-data
+      name: postgres-data
       namespace: demo
